@@ -1,0 +1,141 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Arduino REST Requester</title>
+  <meta name="description" content="Arduino REST Requester">
+  <meta name="author" content="paco">
+
+  <link rel="stylesheet" href="stylesheets/jquery-ui.min.css">
+  <link rel="stylesheet" href="stylesheets/bootstrap.min.css">
+  <link rel="stylesheet" href="stylesheets/main.css">
+
+  <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+  <![endif]-->
+
+  <script src="javascripts/jquery-3.1.1.min.js"></script>
+  <script src="javascripts/jquery-ui.min.js"></script>
+  <script src="javascripts/bootstrap.min.js"></script>
+  <script src="javascripts/main.js"></script>
+</head>
+
+<body>
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Arduino REST Requester</a>
+      </div>
+      <div id="navbar" class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="#">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div><!--/.nav-collapse -->
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="row">
+      <h1>Request Builder</h1>
+
+      <form id="formRequest" class="form-horizontal">
+        <!-- Arduino Server URL Text Input -->
+        <div class="form-group">
+          <label for="arduino-server-url" class="col-sm-2 control-label">Arduino Server URL</label>
+
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="arduino-server-url" placeholder="Arduino Server URL" value="http://192.168.0.1/arduino">
+          </div>
+        </div>
+
+        <hr />
+
+        <!-- LED 1 Switch -->
+        <div class="form-group">
+          <label for="led-1-switch" class="col-sm-2 control-label">LED 1</label>
+
+          <div class="col-sm-10">
+            <div id="led-1-switch" class="btn-group btn-toggle">
+              <button class="btn btn-default">ON</button>
+              <button class="btn btn-primary active">OFF</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="led-2-switch" class="col-sm-2 control-label">LED 2</label>
+
+          <div class="col-sm-10">
+            <div id="led-2-switch" class="btn-group btn-toggle">
+              <button class="btn btn-default">ON</button>
+              <button class="btn btn-primary active">OFF</button>
+            </div>
+          </div>
+        </div>
+
+        <hr />
+
+        <!-- Stepper Speed Slider -->
+        <div class="form-group">
+          <label for="stepper-1-speed" class="col-sm-2 control-label">STEPPER</label>
+
+          <div class="col-sm-1">
+            <label for="stepper-speed" class="col-sm-1 control-label">Speed</label>
+          </div>
+
+          <div class="col-sm-7">
+            <div id="stepper-1-speed" class="slider" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="10"></div>
+          </div>
+
+          <div class="col-sm-1">
+            Val: <span id="stepper-speed-value" class="slider-value"></span>
+          </div>
+
+          <div class="col-sm-1">
+            <button class="btn btn-default btn-sm slider-reset">reset</button>
+          </div>
+        </div>
+
+        <!-- Stepper Acceleration Slider -->
+        <div class="form-group">
+          <div class="col-sm-2"></div>
+
+          <div class="col-sm-1">
+            <label for="stepper-1-acc" class="col-sm-1 control-label">Acc</label>
+          </div>
+
+          <div class="col-sm-7">
+            <div id="stepper-1-acc" class="slider" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="10"></div>
+          </div>
+
+          <div class="col-sm-1">
+            Val: <span id="stepper-acc-value" class="slider-value"></span>
+          </div>
+
+          <div class="col-sm-1">
+            <button class="btn btn-default btn-sm slider-reset">reset</button>
+          </div>
+        </div>
+
+        <hr />
+
+        <div class="form-group">
+          <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" id="reload" class="btn btn-default">Reload</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
