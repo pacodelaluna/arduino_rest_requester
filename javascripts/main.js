@@ -67,23 +67,27 @@ $(document).ready(function() {
   $('#reload').click(function(e) {
     e.preventDefault();
     // Sending request
-    sendRequest('reload', 'true');
+    sendRequest('reload', 'Nan/Nan/Nan');
   });
 });
 
 function sendRequest(key, value) {
+  jQuery.support.cors = true;
+
   $.ajax({
     type: "GET",
-    dataType: "json",
     url: $('#arduino-server-url').val() + '/' + key + '/' + value,
-    timeout: 1000,
+    timeout: 5000,
     beforeSend: function(xhr, settings) {
+      console.log('== XHR Request Sent: ');
       console.log(xhr);
     },
     success: function(response) {
+      console.log('== Success: ');
       console.log(response);
     },
     error: function(jqXHR, textStatus, ex) {
+      console.log('== Error: ')
       console.log(textStatus + "," + ex + "," + jqXHR.responseText);
     }
   });
