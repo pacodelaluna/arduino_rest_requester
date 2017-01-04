@@ -1,6 +1,4 @@
 $(document).ready(function() {
-  var arduinoEndpoint = 'http://192.168.0.11/arduino_wifi/endpoint';
-
   // 7 LEDS : checkboxes - DIGITAL
   // 1 motor : 2 sliders, speed & acc - DIGITAL
   // +
@@ -10,12 +8,58 @@ $(document).ready(function() {
   // /stepper/speed/VAL
   // /stepper/goto/VAL
 
+  var textFieldSource   = $("#text-field-template").html();
+  var textFieldTemplate = Handlebars.compile(textFieldSource);
+
+  $('input[type=text-field]').each(function(index, field) {
+    $(field).replaceWith(textFieldTemplate({
+      field_rid: $(this).attr('rid'),
+      field_class: $(this).attr('class'),
+      field_value: $(this).attr('value'),
+      field_name: $(this).attr('name')
+    }));
+  });
+
+  var switchFieldSource   = $("#switch-field-template").html();
+  var switchFieldTemplate = Handlebars.compile(switchFieldSource);
+
+  $('input[type=switch-field]').each(function(index, field) {
+    $(field).replaceWith(switchFieldTemplate({
+      field_rid: $(this).attr('rid'),
+      field_name: $(this).attr('name')
+    }));
+  });
+
+  var sliderFieldSource   = $("#slider-field-template").html();
+  var sliderFieldTemplate = Handlebars.compile(sliderFieldSource);
+
+  $('input[type=slider-field]').each(function(index, field) {
+    $(field).replaceWith(sliderFieldTemplate({
+      field_rid: $(this).attr('rid'),
+      field_name: $(this).attr('name'),
+      field_action: $(this).attr('action'),
+      field_value: $(this).attr('value'),
+      slider_min: $(this).attr('slider_min'),
+      slider_max: $(this).attr('slider_max')
+    }));
+  });
+
+  var actionFieldSource   = $("#action-field-template").html();
+  var actionFieldTemplate = Handlebars.compile(actionFieldSource);
+
+  $('input[type=action-field]').each(function(index, field) {
+    $(field).replaceWith(actionFieldTemplate({
+      field_rid: $(this).attr('rid'),
+      field_name: $(this).attr('name')
+    }));
+  });
+
   console.log('=== Loaded!');
 
   // Initialize Slider
   $('.slider').slider({
-    min: -2000,
-    max: +2000,
+    min: $(this).data('slider-min'),
+    max: $(this).data('slider-max'),
 
     create: function(event, ui) {
       $(this).parent().parent().find('.slider-value').html(0);
@@ -28,7 +72,7 @@ $(document).ready(function() {
     change: function(event, ui) {
       $(this).parent().parent().find('.slider-value').html(ui.value);
       // Sending request
-      sendRequest($(this).attr('id').replace(/\-/g, '/'), $(this).slider("value"));
+      sendRequest(this, $(this).attr('rid').replace(/\-/g, '/'), $(this).slider("value"));
     }
   });
 
@@ -59,36 +103,44 @@ $(document).ready(function() {
     $(this).find('.btn').toggleClass('btn-default');
 
     // Sending request
-    sendRequest($(this).attr('id').replace(/\-/g, '/'), $(this).find('.active').html());
+    sendRequest(this, $(this).attr('rid').replace(/\-/g, '/'), $(this).find('.active').html());
   });
 
 
   // Send the request to the endpoint
-  $('#reload').click(function(e) {
+  $('.action').click(function(e) {
     e.preventDefault();
     // Sending request
-    sendRequest('reload', 'Nan/Nan/Nan');
+    sendRequest(this, $(this).attr('rid'), 'Nan/Nan/Nan');
   });
 });
 
-function sendRequest(key, value) {
+function sendRequest(context, key, value) {
   jQuery.support.cors = true;
+
+  var endpointUrl = $(context).parents('.request-builder').find('.arduino-url').val();
+
+  $('#logger-area').val('\n' + $('#logger-area').val());
 
   $.ajax({
     type: "GET",
-    url: $('#arduino-server-url').val() + '/' + key + '/' + value,
+    url: endpointUrl + '/' + key + '/' + value,
     timeout: 5000,
     beforeSend: function(xhr, settings) {
-      console.log('== XHR Request Sent: ');
-      console.log(xhr);
+      msg = '== XHR Request Sent: ' + new Date().toLocaleString() + '\n' + settings.type + ' ' + settings.url + '\n';
+      console.log(settings);
+      $('#logger-area').val(msg + $('#logger-area').val());
     },
     success: function(response) {
-      console.log('== Success: ');
-      console.log(response);
+      msg = '== Response Success: ' + new Date().toLocaleString() + '\n' + response + '\n';
+      console.log(msg);
+      $('#logger-area').val(msg + $('#logger-area').val());
     },
     error: function(jqXHR, textStatus, ex) {
-      console.log('== Error: ')
-      console.log(textStatus + "," + ex + "," + jqXHR.responseText);
+      msg = '== Response Error: ' + new Date().toLocaleString() + '\n' + textStatus + " - " + ex + " - " + jqXHR.statusText + '\n';
+      console.log(jqXHR);
+      console.log(ex);
+      $('#logger-area').val(msg + $('#logger-area').val());
     }
   });
 }

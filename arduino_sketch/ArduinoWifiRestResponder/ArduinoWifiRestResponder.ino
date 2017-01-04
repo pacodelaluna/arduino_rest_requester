@@ -1,5 +1,8 @@
 #include <Wire.h>
+// https://github.com/arduino-org/Arduino/tree/master/libraries/ArduinoWiFi
 #include <ArduinoWiFi.h>
+// http://www.airspayce.com/mikem/arduino/AccelStepper/
+
 
 void setup() {
   Wifi.begin();
